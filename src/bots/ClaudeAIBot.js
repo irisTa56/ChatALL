@@ -23,15 +23,17 @@ export default class ClaudeAIBot extends Bot {
    */
   async _checkAvailability() {
     let available = false;
-
-    if (store.state.claudeAi.org) {
-      const currentAcountResponse = await axios.get(
-        "https://claude.ai/api/auth/current_account",
-      );
-
-      if (currentAcountResponse.data.success) {
-        available = true;
+    try {
+      if (store.state.claudeAi.org) {
+        const currentAcountResponse = await axios.get(
+          "https://claude.ai/api/account",
+        );
+        if (currentAcountResponse.status === 200) {
+          available = true;
+        }
       }
+    } catch (error) {
+      console.error("Error ClaudeAIBot _checkAvailability", error);
     }
 
     return available;
